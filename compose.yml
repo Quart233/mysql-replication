@@ -1,0 +1,21 @@
+services:
+  source:
+    image: mysql:5.7
+    ports:
+      - 33061:3306
+    volumes:
+      - source-data:/www/server/data
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+  replica:
+    image: mysql:5.7
+    ports:
+      - 33062:3306
+    volumes:
+      - replica-data:/www/server/data
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+
+volumes:
+  source-data:
+  replica-data:
