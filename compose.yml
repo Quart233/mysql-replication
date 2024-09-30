@@ -4,6 +4,9 @@ services:
     ports:
       - 33061:3306
     volumes:
+      - type: bind
+        source: ./source.cnf
+        target: /etc/my.cnf
       - source-data:/www/server/data
     environment:
       - MYSQL_ROOT_PASSWORD=root
@@ -12,6 +15,9 @@ services:
     ports:
       - 33062:3306
     volumes:
+      - type: bind
+        source: ./replica.cnf
+        target: /etc/my.cnf
       - replica-data:/www/server/data
     environment:
       - MYSQL_ROOT_PASSWORD=root

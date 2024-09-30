@@ -32,5 +32,9 @@ pid-file=/var/run/mysqld/mysqld.pid
 [client]
 socket=/var/run/mysqld/mysqld.sock
 
+# replication
+gtid_mode=ON
+enforce-gtid-consistency=ON
+
 !includedir /etc/mysql/conf.d/
 !includedir /etc/mysql/mysql.conf.d/
