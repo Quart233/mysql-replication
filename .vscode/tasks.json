@@ -4,10 +4,28 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "compose: up",
+            "label": "docker-compose: up",
             "type": "shell",
             "command": "docker",
             "args": [ "compose", "up" ]
-        }
+        },
+        {
+            "label": "docker-compose: down",
+            "type": "shell",
+            "command": "docker",
+            "args": [ "compose", "down" ]
+        },
+        {
+            "label": "docker-volume: prune",
+            "type": "shell",
+            "command": "docker",
+            "args": [ "volume", "prune", "--all" ]
+        },
+        {
+            "label": "mysql: init",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": ["docker-compose: up", "docker-compose: down", "docker-volume: prune"]
+        },
     ]
 }
