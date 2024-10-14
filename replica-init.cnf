@@ -24,21 +24,18 @@ socket=/var/run/mysqld/mysqld.sock
 secure-file-priv=/var/lib/mysql-files
 user=mysql
 
-# binlog
-server-id=1
-log_bin=mysql-bin
-
 # Disabling symbolic-links is recommended to prevent assorted security risks
 symbolic-links=0
+
+# binlog
+server-id=2
+log_bin
+
 
 #log-error=/var/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid
 [client]
 socket=/var/run/mysqld/mysqld.sock
-
-# replication
-gtid_mode=ON
-enforce-gtid-consistency=ON
 
 !includedir /etc/mysql/conf.d/
 !includedir /etc/mysql/mysql.conf.d/

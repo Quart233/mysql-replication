@@ -22,10 +22,74 @@
             "args": [ "volume", "prune", "--all" ]
         },
         {
-            "label": "mysql: init",
+            "label": "mysql: init-source",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "run",
+                "--name",
+                "${config:source-init}",
+                "-e",
+                "MYSQL_ROOT_PASSWORD=root",
+                "-v",
+                "${config:source-init}:/var/lib/mysql",
+                "-v",
+                "./source-init.cnf:/etc/my.cnf:ro",
+                "mysql:5.7",
+            ]
+        },
+        {
+            "label": "mysql: init-replica",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "run",
+                "--name",
+                "${config:replica-init}",
+                "-e",
+                "MYSQL_ROOT_PASSWORD=root",
+                "-v",
+                "${config:replica-init}:/var/lib/mysql",
+                "-v",
+                "./replica-init.cnf:/etc/my.cnf:ro",
+                "mysql:5.7",
+            ]
+        },
+        {
+            "label": "init: replica-stop",
+            "type": "shell",
+            "command": "docker",
+            "args": [ "stop", "${config:replica-init}"]
+        },
+        {
+            "label": "init: source-stop",
+            "type": "shell",
+            "command": "docker",
+            "args": [ "stop", "${config:source-init}"]
+        },
+        {
+            "label": "build: init",
+            "type": "shell",
+            "command": "docker",
+            "args": [ "build", "-t", "mysql:init", "." ]
+        },
+        {
+            "label": "mysql: replication",
             "type": "shell",
             "dependsOrder": "sequence",
             "dependsOn": ["docker-compose: up", "docker-compose: down", "docker-volume: prune"]
+        },
+        {
+            "label": "init: start",
+            "type": "shell",
+            "dependsOrder": "parallel",
+            "dependsOn": ["mysql: init-source", "mysql: init-replica"]
+        },
+        {
+            "label": "init: stop",
+            "type": "shell",
+            "dependsOrder": "parallel",
+            "dependsOn": ["init: source-stop", "init: replica-stop"]
         },
     ]
 }

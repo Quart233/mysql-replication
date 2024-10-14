@@ -1,0 +1,4 @@
+{
+    "source-init": "mysql-replication_source-data",
+    "replica-init": "mysql-replication_replica-data"
+}
