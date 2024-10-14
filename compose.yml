@@ -5,9 +5,7 @@ services:
       - 33061:3306
     volumes:
       - source-data:/var/lib/mysql
-      - type: bind
-        source: ./source.cnf
-        target: /etc/my.cnf
+      - ./source.cnf:/etc/my.cnf:ro
 
   replica:
     image: mysql:5.7
@@ -15,9 +13,7 @@ services:
       - 33062:3306
     volumes:
       - replica-data:/var/lib/mysql
-      - type: bind
-        source: ./replica.cnf
-        target: /etc/my.cnf
+      - ./replica.cnf:/etc/my.cnf:ro
     depends_on:
       - source
 
