@@ -6,6 +6,8 @@ services:
     volumes:
       - source-data:/var/lib/mysql
       - ./source.cnf:/etc/my.cnf:ro
+    environment:
+      - MYSQL_ROOT_PASSWORD=test123 
 
   replica:
     image: mysql:5.7
@@ -14,8 +16,9 @@ services:
     volumes:
       - replica-data:/var/lib/mysql
       - ./replica.cnf:/etc/my.cnf:ro
-    depends_on:
-      - source
+    environment:
+      - MYSQL_ROOT_PASSWORD=test123 
+    
 
 volumes:
   source-data:
