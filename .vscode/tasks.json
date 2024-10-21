@@ -8,6 +8,39 @@
             "type": "shell",
             "command": "docker",
             "args": [ "compose", "up" ]
-        }
+        },
+        {
+            "label": "replica: replication-stop",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "run", "-it", "--rm", "mysql:5.7", "bash", "-c",
+                "mysql -h192.168.1.24 -P33062 -uroot -ptest123 -e \"STOP SLAVE\"",
+            ]
+        },
+        {
+            "label": "replica: replication-start",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "run", "-it", "--rm", "mysql:5.7", "bash", "-c",
+                "mysql -h192.168.1.24 -P33062 -uroot -ptest123 -e \"START SLAVE\"",
+            ]
+        },
+        {
+            "label": "replica: clone",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "run", "-it", "--rm", "mysql:5.7", "bash", "-c",
+                "mysqldump --set-gtid-purged=OFF --add-drop-table -h192.168.1.24 -P33062 -uroot -ptest123 test | mysql -h192.168.1.24 -P33062 -uroot -ptest123 test_$(date +%u)",
+            ]
+        },
+        {
+            "label": "replication: backup",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [ "replica: replication-stop", "replica: clone", "replica: replication-start"]
+        },
     ]
 }
