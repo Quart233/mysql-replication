@@ -28,13 +28,28 @@
             ]
         },
         {
-            "label": "replica: clone",
+            "label": "replica: dump",
             "type": "shell",
             "command": "docker",
             "args": [
-                "run", "-it", "--rm", "mysql:5.7", "bash", "-c",
-                "mysqldump --set-gtid-purged=OFF --add-drop-table -h192.168.1.24 -P33062 -uroot -ptest123 test | mysql -h192.168.1.24 -P33062 -uroot -ptest123 test_$(date +%u)",
+                "run", "-it", "--rm", "-v", "mysql-temp:/dump", "mysql:5.7", "bash", "-c",
+                "mysqlpump --set-gtid-purged=OFF --add-drop-table -h192.168.1.24 -P33062 -uroot -ptest123 test --result-file=/dump/dump.sql"
             ]
+        },
+        {
+            "label": "replica: import",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "run", "-it", "--rm", "-v", "mysql-temp:/dump", "mysql:5.7", "bash", "-c",
+                "mysql -h192.168.1.24 -P33062 -uroot -ptest123 test_$(date +%u) < /dump/dump.sql",
+            ]
+        },
+        {
+            "label": "replica: clone",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [ "replica: dump", "replica: import"]
         },
         {
             "label": "replication: backup",
