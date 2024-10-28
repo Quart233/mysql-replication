@@ -1,6 +1,7 @@
 services:
   source:
     image: mysql:5.7
+    command: ["--ignore-db-dir=lost+found"]
     ports:
       - 33061:3306
     volumes:
@@ -11,6 +12,7 @@ services:
 
   replica:
     image: mysql:5.7
+    command: ["--ignore-db-dir=lost+found"]
     ports:
       - 33062:3306
     volumes:
